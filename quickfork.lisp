@@ -34,17 +34,17 @@ a downloaded archive) by Quicklisp")
 (defmethod ql:quickload :after (systems &key verbose prompt explain
                                          &allow-other-keys)
   (declare (ignorable systems verbose prompt explain))
-  (format t "~%Compiled systems: ")
+  (format t "~%Systems compiled by QL: ")
   (if cl-user::*compiled-systems*
       (dolist (system cl-user::*compiled-systems*)
         (format t "~% ~S" system))
       (format t "(none)"))
-  (format t "~%Loaded systems: ")
+  (format t "~%Systems loaded by QL: ")
   (if cl-user::*loaded-systems*
       (dolist (system cl-user::*loaded-systems*)
         (format t "~% ~S" system))
       (format t "(none)"))
-  (format t "~%QL Installed systems: ")
+  (format t "~%Systems installed by QL: ")
   (if cl-user::*installed-systems*
       (dolist (release cl-user::*installed-systems*)
         (format t "~% ~S" (ql-dist::project-name release)))
@@ -76,3 +76,4 @@ cl-user::*installed-systems* for more info."))
 
 (defmethod ql-dist::install :after ((release ql-dist::release))
   (setf cl-user::*installed-systems* (append cl-user::*installed-systems* (list release))))
+
