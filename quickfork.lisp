@@ -79,10 +79,13 @@ cl-user::*installed-systems* for more info."))
 (defmethod ql-dist::install :after ((release ql-dist::release))
   (setf cl-user::*installed-systems* (append cl-user::*installed-systems* (list release))))
 
-(defparameter *projects-directory* "/Users/svspire/Lisp/third-party/quicklisp-projects/projects/"
+; you need to clone the repo at https://github.com/quicklisp/quicklisp-projects
+;  to get this directory
+(defparameter *projects-directory* "~/Lisp/third-party/quicklisp-projects/projects/"
   "Quicklisp projects directory")
 
-(defvar *projects-database* nil)
+(defvar *projects-database* nil "Database of all known Quicklisp projects including their name, their
+type (e.g. :git, :mercurial, etc.) and their upstream repository location")
 
 (defun wsp (char)
   (member char '(#\space #\tab #\return #\linefeed)))
