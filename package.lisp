@@ -39,5 +39,6 @@
   (:nicknames :qf)
   (:use :cl)
   (:export
-   #:stats))
+   #:stats
+   #:repo-location))
 

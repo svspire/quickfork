@@ -41,4 +41,5 @@
   :depends-on (:uiop)
   :serial t
   :components ((:file "package")
+               (:file "patches")
                (:file "quickfork")))        
