@@ -2,6 +2,8 @@
 ;;; 27-Feb-2018 SVS
 ;;; Quicklisp for teams
 
+(in-package :quickfork)
+
 #|
 Functions needed:
 (qf:repo-location :system) ; returns URL for repo for :system
@@ -131,7 +133,6 @@ cl-user::*installed-systems* for more info."))
 
 (defun ensure-projects-database ()
   (unless *projects-database* (setf *projects-database* (populate-projects))))
-
 
 (defun stats ()
   "Report number of projects per repo type, sorted most to least."
