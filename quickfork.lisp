@@ -93,6 +93,7 @@ type (e.g. :git, :mercurial, etc.) and their upstream repository location")
       (sort alist #'> :key #'cdr))))
 
 (defun repo-location (project-name)
+  "Look up the repo for a given project name"
   (ensure-projects-database)
   (when (symbolp project-name)
     (setf project-name (string-downcase (symbol-name project-name))))
