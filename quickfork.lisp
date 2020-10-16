@@ -103,9 +103,12 @@ type (e.g. :git, :mercurial, etc.) and their upstream repository location")
 
 (defun direct-dependencies (project-name)
   "Return the direct dependencies of project"
-  (mapcar (lambda (dependency)
-            (asdf::resolve-dependency-spec project-name dependency))
-          (asdf:system-depends-on (asdf:find-system project-name))))
+  (loop with main-system = (asdf:find-system project-name)
+        with dependencies = (asdf:system-depends-on main-system)
+        for dependency in dependencies
+        for dep-system = (asdf::resolve-dependency-spec project-name dependency)
+        when dep-system
+          collect dep-system))
 
 (defun %all-dependencies (project-list accum-table)
   (when project-list
