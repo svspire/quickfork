@@ -108,6 +108,7 @@ type (e.g. :git, :mercurial, etc.) and their upstream repository location")
           (asdf:system-depends-on (asdf:find-system project-name))))
 
 (defun %all-dependencies (project-list accum-table)
+  (declare (optimize (debug 1))) ; ensure tail calls in implementations that support it
   (when project-list
     (mapc (lambda (project)
             (unless (gethash project accum-table)
@@ -162,7 +163,7 @@ type (e.g. :git, :mercurial, etc.) and their upstream repository location")
           (setf non-gits (remove loc non-gits :test #'equalp))))
               
       (dolist (d gits)
-        (format t "~%git clone ~@[~A~] ~S" clone-args (ensure-ends-with-git (third d))))
+        (format t "~%git clone ~@[~A ~]~S" clone-args (ensure-ends-with-git (third d))))
       (format t "~%~%Non-git dependencies:")
       (dolist (d non-gits)
         (format t "~%~S" d)))))
