@@ -5,6 +5,14 @@
 ;;; Ensure that every time quickload is called, it will keep track of every
 ;;;  asdf system that it loads and/or compiles.
 
+;;; These hooks produce a list of systems loaded whenever
+;;;  (ql:quickload :system) runs.
+;;; For each system loaded, return:
+;;;  Name of system.
+;;;  Whether system was pulled across the net or not.
+;;;  Where on the local file system the system was loaded from.
+;;;  Whether the system was compiled or not.
+
 (in-package :quicklisp)
 (export '(*compiled-systems*
           *loaded-systems*

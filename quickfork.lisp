@@ -4,19 +4,6 @@
 
 (in-package :quickfork)
 
-#|
-Functions needed:
-(qf:repo-location :system) ; returns URL for repo for :system
-
-Need a hook that produces a list of systems loaded whenever
-(ql:quickload :system) runs.
-For each system loaded, return:
-Name of system.
-Whether system was pulled across the net or not.
-Where on the local file system the system was loaded from.
-Whether the system was compiled or not.
-|#
-
 ; you need to clone the repo at https://github.com/quicklisp/quicklisp-projects
 ;  to get this directory
 (defparameter *projects-directory* "~/Lisp/third-party/quicklisp-projects/projects/"
@@ -91,8 +78,10 @@ type (e.g. :git, :mercurial, etc.) and their upstream repository location")
                tallies)
       (sort alist #'> :key #'cdr))))
 
+(defgeneric repo-location (project-name)
+  (:documentation "Look up and return URL for repo for project-name"))
+
 (defmethod repo-location (project-name)
-  "Look up the repo for a given project name"
   (ensure-projects-database)
   (when (symbolp project-name)
     (setf project-name (string-downcase (symbol-name project-name))))
