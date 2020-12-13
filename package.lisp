@@ -40,5 +40,8 @@
   (:use :cl)
   (:export
    #:stats
-   #:repo-location))
+   #:repo-location
+   #:direct-dependencies
+   #:all-dependencies
+   #:make-clone-commands))
 
