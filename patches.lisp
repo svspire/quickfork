@@ -16,14 +16,14 @@
 (defparameter *installed-systems* nil "Releases installed (downloaded or reexpanded from ~
 a downloaded archive) by Quicklisp")
 
-(defmethod ql:quickload :before (systems &key verbose prompt explain
+(defmethod quickload :before (systems &key verbose prompt explain
                                          &allow-other-keys)
   (declare (ignorable systems verbose prompt explain))
   (setf *compiled-systems* nil
         *loaded-systems* nil
         *installed-systems* nil))
 
-(defmethod ql:quickload :after (systems &key verbose prompt explain
+(defmethod quickload :after (systems &key verbose prompt explain
                                          &allow-other-keys)
   (declare (ignorable systems verbose prompt explain))
   (format t "~%Systems compiled by QL: ")
@@ -46,7 +46,7 @@ ql:*installed-systems* for more info."))
 
 (defmethod asdf:perform :around ((op asdf::basic-compile-op) (file asdf:CL-SOURCE-FILE))
   (let* ((system (asdf:component-system file))
-         (loc (ql:where-is-system system))
+         (loc (where-is-system system))
          (syslist nil))
     (when loc
       (setf syslist (list (asdf:component-name system)
@@ -58,7 +58,7 @@ ql:*installed-systems* for more info."))
   (call-next-method))
 
 (defmethod asdf:perform :around ((op asdf::basic-load-op) (c asdf:system))
-  (let ((loc (ql:where-is-system c))
+  (let ((loc (where-is-system c))
         (syslist nil))
     (when loc
       (setf syslist (list (asdf:component-name c)
