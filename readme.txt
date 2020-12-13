@@ -16,6 +16,22 @@ Some of the problems that forking (in the github sense of the word*) addresses a
 4. Quicklisp doesn't provide a way to send pull requests to the original authors. Again, you have to make your own forks to solve this problem.
 
 
-All the metadata needed to do this is in the Quicklisp github repos.
+All the metadata needed to do this is in the Quicklisp github repos; specifically "quicklisp-projects".
 
 *"forking" here refers to making a complete copy of a repository for purposes of being able to maintain it independently of the original author. This is the github sense of the word. The motivation is not so much to create a brand-new version of the project and take it in a new direction, as it is to create a private branch from which changes can be cleanly integrated with the original using pull requests and modern distributed source code management systems.
+
+
+TO USE QUICKFORK:
+
+You must (one time) clone the repo: https://github.com/quicklisp/quicklisp-projects
+This is the master database of where the repositories of individual quicklisp projects are located. Quickfork needs this database to do its job.
+
+If your local clone is located at "~/quicklisp-projects/", then ensure that qf::*projects-directory* is set to the "projects/" subdirectory of that directory. See *projects-directory* in quickfork.lisp for an example.
+
+Now you can create the clone commands you'll need to clone all the projects needed for a given system:
+
+(qf:make-clone-commands :bordeaux-threads) ; for example
+
+#'make-clone-commands does NOT execute any commands in your shell or clone anything. It merely builds git clone commands which you can then copy/paste into your shell.
+
+After you have cloned the necessary repos, the next step is to teach asdf (which is used by ql:quickload) to load code from your cloned repos rather than from your local quicklisp distributions. There are many ways to do this; I have a mechanism that works for me which I can document if anyone is interested.
