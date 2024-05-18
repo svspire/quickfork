@@ -126,21 +126,13 @@ type (e.g. :git, :mercurial, etc.) and their upstream repository location")
          (let ((pos (search subseq seq :from-end t)))
            (and pos (= pos (- lseq lsubseq)))))))
 
-(defun make-clone-commands (project-name &optional clone-args)
-  "Prints git clone commands for all dependencies of project that are of type :GIT.
-   clone-args -- if non-nil -- is assumed to be a string such as \"--mirror\" which
-   will be output as arguments to the git clone commands"
+(defun find-repos (project-name)
   (flet ((git? (loc)
-           (eq :GIT (second loc)))
-         (ensure-ends-with-git (string)
-           (if (ends-with ".git" string)
-               string
-               (concatenate 'string string ".git"))))
-
+           (eq :GIT (second loc))))
     (let* ((locs (mapcar 'repo-location (all-dependencies project-name)))
            (gits (remove-if-not #'git? locs))
            (non-gits (remove-if #'git? locs)))
-
+      
       ;; Some "non-gits" are actually gits. Find those and move them.
       (let ((false-non-gits nil))
         (mapc (lambda (loc)
@@ -151,12 +143,38 @@ type (e.g. :git, :mercurial, etc.) and their upstream repository location")
         (dolist (loc false-non-gits)
           (push loc gits)
           (setf non-gits (remove loc non-gits :test #'equalp))))
-              
-      (dolist (d gits)
-        (format t "~%git clone ~@[~A ~]~S" clone-args (ensure-ends-with-git (third d))))
-      (format t "~%~%Non-git dependencies:")
-      (dolist (d non-gits)
-        (format t "~%~S" d)))))
+      (values gits non-gits))))
+
+(defun ensure-ends-with-git (string)
+  (if (ends-with ".git" string)
+      string
+      (concatenate 'string string ".git")))
+
+(defun make-clone-commands (project-name &optional clone-args)
+  "Prints git clone commands for all dependencies of project that are of type :GIT.
+  clone-args -- if non-nil -- is assumed to be a string such as \"--mirror\" which
+  will be output as arguments to the git clone commands"
+  
+  (multiple-value-bind (gits non-gits)
+                       (find-repos project-name)
+    (dolist (d gits)
+      (format t "~%git clone ~@[~A ~]~S" clone-args (ensure-ends-with-git (third d))))
+    (format t "~%~%Non-git dependencies:")
+    (dolist (d non-gits)
+      (format t "~%~S" d))))
+
+(defun make-fork-commands (project-name &optional fork-args)
+  "Prints gh fork commands (assumes you are using the github CLI command 'gh')
+  for all dependencies of project that are of type :GIT.
+  fork-args -- if non-nil -- is assumed to be a string such as \"--clone\" which
+  will be output as arguments to the git clone commands"
+  (multiple-value-bind (gits non-gits)
+                       (find-repos project-name)
+    (dolist (d gits)
+      (format t "~%gh repo fork ~S ~@[~A ~]" (ensure-ends-with-git (third d)) fork-args))
+    (format t "~%~%Non-git dependencies:")
+    (dolist (d non-gits)
+      (format t "~%~S" d))))
     
 #|
 ? (qf::make-clone-commands :rcl)
@@ -209,4 +227,30 @@ Non-git dependencies:
 ("rcl" :HTTPS "https://common-lisp.net/project/rcl/rcl.tar.gz")
 NIL
 ? 
+|#
+
+#|
+; If you can use the gh command to make forks:
+
+; First--in a terminal--do this:
+; $ gh auth login # this sets up the authentication you need to use the github CLI
+
+; Then back in Lisp do this:
+; (qf:make-fork-commands :rcl "--clone --org=Myorg")
+
+gh repo fork "https://github.com/sionescu/bordeaux-threads.git" --clone --org=Myorg 
+gh repo fork "https://github.com/cffi/cffi.git" --clone --org=Myorg 
+gh repo fork "https://github.com/Shinmera/array-utils.git" --clone --org=Myorg 
+gh repo fork "https://github.com/cl-babel/babel.git" --clone --org=Myorg 
+gh repo fork "https://github.com/melisgl/named-readtables.git" --clone --org=Myorg 
+gh repo fork "https://github.com/trivial-features/trivial-features.git" --clone --org=Myorg 
+gh repo fork "https://github.com/trivial-garbage/trivial-garbage.git" --clone --org=Myorg 
+gh repo fork "https://gitlab.common-lisp.net/alexandria/alexandria.git" --clone --org=Myorg 
+gh repo fork "https://github.com/Shinmera/dissect.git" --clone --org=Myorg 
+gh repo fork "https://github.com/Shinmera/simple-tasks.git" --clone --org=Myorg 
+
+Non-git dependencies:
+("uiop" :HTTPS "https://asdf.common-lisp.dev/archives/uiop.tar.gz")
+("rcl" :HTTPS "https://common-lisp.net/project/rcl/rcl.tar.gz")
+NIL
 |#

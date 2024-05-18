@@ -43,5 +43,6 @@
    #:repo-location
    #:direct-dependencies
    #:all-dependencies
-   #:make-clone-commands))
+   #:make-clone-commands
+   #:make-fork-commands))
 
