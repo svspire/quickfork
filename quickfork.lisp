@@ -93,9 +93,10 @@ type (e.g. :git, :mercurial, etc.) and their upstream repository location")
 
 (defun direct-dependencies (project-name)
   "Return the direct dependencies of project"
-  (mapcar (lambda (dependency)
-            (asdf::resolve-dependency-spec project-name dependency))
-          (asdf:system-depends-on (asdf:find-system project-name))))
+  (remove-if #'null ; because asdf::resolve-dependency-spec can sometimes return a list that contains nil elements
+             (mapcar (lambda (dependency)
+                       (asdf::resolve-dependency-spec project-name dependency))
+                     (asdf:system-depends-on (asdf:find-system project-name)))))
 
 (defun %all-dependencies (project-list accum-table)
   (declare (optimize (debug 1))) ; ensure tail calls in implementations that support it
@@ -108,7 +109,7 @@ type (e.g. :git, :mercurial, etc.) and their upstream repository location")
   (loop for k being each hash-key of accum-table collect k))
 
 (defun all-dependencies (project-name)
-  "Return a set of the names of all the dependencies of project."
+  "Return a set (i.e. without duplicates) of all the dependencies of project."
   (let ((accum (make-hash-table :test #'equalp)))
     (%all-dependencies (list project-name) accum)))
 
