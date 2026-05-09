@@ -177,7 +177,7 @@ type (e.g. :git, :mercurial, etc.) and their upstream repository location")
       (format t "~%~S" d))))
     
 #|
-? (qf::make-clone-commands :rcl)
+? (qf:make-clone-commands :rcl)
 
 git clone "https://github.com/sionescu/bordeaux-threads.git"
 git clone "https://github.com/melisgl/named-readtables.git"
@@ -209,7 +209,7 @@ where it is unfortunately part of the asdf repo.
 
 |#
 #|
-? (qf::make-clone-commands :rcl "--mirror")
+? (qf:make-clone-commands :rcl "--mirror")
 
 git clone --mirror "https://github.com/sionescu/bordeaux-threads.git"
 git clone --mirror "https://github.com/melisgl/named-readtables.git"
