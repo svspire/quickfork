@@ -21,13 +21,6 @@ All the metadata needed to do this is in the Quicklisp github repos; specificall
 
 *"forking" here refers to making a complete copy of a repository for purposes of being able to maintain it independently of the original author. This is the github sense of the word. The motivation is not so much to create a brand-new version of the project and take it in a new direction, as it is to create a private branch from which changes can be cleanly integrated with the original using pull requests and modern distributed source code management systems.
 
-Note that quickfork should probably be called "quickclone" rather than "quickfork" because
-what it mostly helps with is cloning a repository rather than forking it. To truly fork a
-repository requires that you perform operations on github, and we're not really helping
-with that. But since "quickfork" is easier to type than "quickclone", we'll keep the former
-name. If you truly want to fork a repo on github (or gitlab or bitbucket etc.), #'qf:make-clone-commands can at least tell you where the main repo for a system is located.
-
-
 TO USE QUICKFORK:
 
 I develop and test in CCL. I haven't attempted to use this in SBCL, but it's pretty basic. It will likely work.
