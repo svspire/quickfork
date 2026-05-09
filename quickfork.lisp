@@ -102,6 +102,7 @@ type (e.g. :git, :mercurial, etc.) and their upstream repository location")
   (declare (optimize (debug 1))) ; ensure tail calls in implementations that support it
   (when project-list
     (mapc (lambda (project)
+            (setf project (asdf:find-system project)) ; ensure it's an asdf project object
             (unless (gethash project accum-table)
               (setf (gethash project accum-table) t)
               (%all-dependencies (direct-dependencies project) accum-table)))
@@ -109,7 +110,8 @@ type (e.g. :git, :mercurial, etc.) and their upstream repository location")
   (loop for k being each hash-key of accum-table collect k))
 
 (defun all-dependencies (project-name)
-  "Return a set (i.e. without duplicates) of all the dependencies of project."
+  "Return a list that is a set (i.e. without duplicates) of all the dependencies of project.
+   In no particular order."
   (let ((accum (make-hash-table :test #'equalp)))
     (%all-dependencies (list project-name) accum)))
 
