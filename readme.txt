@@ -34,7 +34,7 @@ Now you can create the git clone commands you'll need to clone all the projects 
 
 (qf:make-clone-commands :bordeaux-threads) ; for example
 
-#'make-clone-commands does NOT execute any commands in your shell or clone anything. It merely builds git clone commands which you can then copy/paste into your shell.
+#'make-clone-commands does NOT execute any commands in your shell or clone anything. It merely builds git clone commands which you can then copy/paste into your shell. The same is true for #'make-fork-commands.
 
 Example:
 ? (qf:make-clone-commands :rcl "--mirror")
@@ -80,5 +80,10 @@ Non-git dependencies:
 ("rcl" :HTTPS "https://common-lisp.net/project/rcl/rcl.tar.gz")
 NIL
 
+Another useful function is #'qf:repo-location. If all you want to know is the URL for the repo of a single Quicklisp project, use this.
+
+Example:
+? (qf:repo-location :coleslaw)
+("coleslaw" :GIT "https://github.com/coleslaw-org/coleslaw.git")
 
 After you have cloned the necessary repos, the next step is to teach asdf (which is used by ql:quickload) to load code from your cloned repos rather than from your local quicklisp distributions. There are many ways to do this; I have a mechanism that works for me which I can document if anyone is interested.
